@@ -1,0 +1,19 @@
+{{ define "telegram.message" }}
+{{/* --- ЗАГОЛОВОК (Общий для группы) --- */}}
+{{ if eq .Status "firing" }}🔥 <b>FIRING</b>{{ else }}✅ <b>RESOLVED</b>{{ end }} <b>[{{ .GroupLabels.alertname }}]</b>
+{{ if .CommonLabels.severity }}<b>Severity:</b> {{ .CommonLabels.severity | toUpper }}{{ end }}
+
+{{/* --- ТЕЛО СООБЩЕНИЯ (Цикл по всем алертам) --- */}}
+{{ range .Alerts }}
+➖➖➖➖➖➖➖➖➖➖
+<b>Instance:</b> <code>{{ .Labels.instance }}</code>
+{{ if .Annotations.summary }}<b>Summary:</b> {{ .Annotations.summary }}{{ end }}
+{{ if .Annotations.description }}<b>Description:</b> {{ .Annotations.description }}{{ end }}
+{{ if .Annotations.value }}<b>Value:</b> {{ .Annotations.value }}{{ end }}
+👉 <a href="{{ .GeneratorURL }}">График (Prometheus)</a>
+{{ end }}
+
+{{/* --- ПОДВАЛ (Общая ссылка на Alertmanager) --- */}}
+➖➖➖➖➖➖➖➖➖➖
+<a href="{{ .ExternalURL }}">🤖 Alertmanager</a>
+{{ end }}

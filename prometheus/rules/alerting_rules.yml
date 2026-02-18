@@ -1,0 +1,12 @@
+groups:
+  - name: blackbox-alerts
+    rules:
+    - alert: InstanceStatus_test3
+      expr: probe_success < 1
+      for: 2s
+      labels:
+        severity: critical
+      annotations:
+        summary: "Недоступен ресурс: {{ $labels.instance }}"
+        description: "Blackbox Exporter сообщает о недоступности цели. \nЦель: {{ $labels.instance }}\nJob: {{ $labels.job }}\nТекущее значение: {{ $value }}"
+        value: "{{ $value  }}"

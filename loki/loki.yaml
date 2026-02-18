@@ -1,0 +1,60 @@
+auth_enabled: false
+
+server:
+  http_listen_port: 3100
+
+common:
+  instance_addr: 127.0.0.1
+  path_prefix: /loki
+  storage:
+    filesystem:
+      chunks_directory: /loki/chunks
+      rules_directory: /loki/rules
+  replication_factor: 1
+  ring:
+    kvstore:
+      store: inmemory
+
+schema_config:
+  configs:
+  - from: 2026-01-01
+    store: tsdb
+    object_store: s3
+    schema: v13
+    index:
+      prefix: index_
+      period: 24h
+
+storage_config:
+  tsdb_shipper:
+    active_index_directory: /loki/index
+    cache_location: /loki/index_cache
+  aws:
+    endpoint: http://minio:9000
+    bucketnames: loki-data
+    access_key_id: minioadmin
+    secret_access_key: minioadmin
+    s3forcepathstyle: true
+    insecure: true
+
+limits_config:
+  retention_period: 28d
+  reject_old_samples: true
+  reject_old_samples_max_age: 170h
+
+  ingestion_rate_mb: 10
+  ingestion_burst_size_mb: 20
+  max_global_streams_per_user: 5000
+  max_line_size: 256KB
+
+  max_label_name_length: 1024
+  max_label_value_length: 2048
+
+  max_entries_limit_per_query: 5000
+  max_query_length: 30d1h
+
+compactor:
+  working_directory: /loki/compactor
+  compaction_interval: 10m
+  retention_enabled: true
+  delete_request_store: s3

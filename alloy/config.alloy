@@ -1,0 +1,97 @@
+// Finding docker containers
+discovery.docker "all_containers" {
+  host = "unix:///var/run/docker.sock"
+}
+
+// LOGS
+
+discovery.relabel "logs_processing" {
+  targets = discovery.docker.all_containers.targets
+	
+	// Deleting "/" in container name
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+		regex = "/?(.*)"
+		target_label = "container"
+  }
+}
+
+loki.source.docker "log_collector" {
+	host = "unix:///var/run/docker.sock"
+	targets = discovery.relabel.logs_processing.output
+	forward_to = [loki.write.local_loki.receiver]
+}
+
+loki.write "local_loki" {
+	endpoint {
+		url = "http://loki:3100/loki/api/v1/push"
+	}
+}
+
+
+// METRICS
+
+discovery.relabel "metrics_autodiscovery" {
+	targets = discovery.docker.all_containers.targets
+	
+	// Getting containers with prometheus.io/scrape label: true and skipping others
+	rule {
+		source_labels = ["__meta_docker_container_label_prometheus_io_scrape"]
+		regex = "true"
+		action = "keep"
+	}
+	
+	// constructing ip:port with prometheus.io/port label
+	rule {
+		source_labels = ["__address__", "__meta_docker_container_label_prometheus_io_port"]
+		regex = "([^:]+)(?::\\d+)?;(\\d+)" // taking ip (group 1) and port (proup 2)
+		replacement = "$1:$2" // join ip and port
+		target_label = "__address__" // changing __address__
+	}
+
+	// if prometheus.io/path label defined, taking it
+	rule {
+		source_labels = ["__meta_docker_container_label_prometheus_io_path"]
+		regex = "(.*)"
+		target_label = "__metrics_path__"
+	}
+}
+
+prometheus.scrape "auto_scraper" {
+	targets = discovery.relabel.metrics_autodiscovery.output
+
+	scrape_interval = "10s"
+	scrape_timeout = "10s"
+
+	forward_to = [prometheus.remote_write.local_prom.receiver]
+}
+
+prometheus.remote_write "local_prom" {
+	endpoint {
+		url = "http://prometheus:9090/api/v1/write"
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
