@@ -1,0 +1,4 @@
+---
+- name: LGTM-stack deploying
+  hosts: all
+  become: true

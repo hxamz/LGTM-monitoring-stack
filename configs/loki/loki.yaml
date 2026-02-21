@@ -32,8 +32,8 @@ storage_config:
   aws:
     endpoint: http://minio:9000
     bucketnames: loki-data
-    access_key_id: minioadmin
-    secret_access_key: minioadmin
+    access_key_id: {{ vault_minio_root_user }}
+    secret_access_key: {{ vault_minio_root_password }}
     s3forcepathstyle: true
     insecure: true
 

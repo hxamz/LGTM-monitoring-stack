@@ -1,0 +1,10 @@
+all:
+  children:
+    monitorting_core:
+      hosts:
+        core:
+    monitoring_agents:
+      hosts:      
+        agent-1:
+        agent-2:
+

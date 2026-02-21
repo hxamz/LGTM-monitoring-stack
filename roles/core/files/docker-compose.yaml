@@ -1,32 +1,4 @@
 services:
-  node-exporter:
-    image: prom/node-exporter:v1.10.0
-    container_name: node-exporter
-    restart: unless-stopped
-    
-    network_mode: host
-    pid: host
-    userns_mode: host
-
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-          cpus: "0.5"
-        reservations:
-          memory: 128M
-
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    command:
-      - '--path.procfs=/host/proc'
-      - '--path.sysfs=/host/sys'
-      - '--path.rootfs=/rootfs'
-      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
-      - '--web.listen-address=172.17.0.1:9100'     
-
   prometheus:
     image: prom/prometheus:v3.9.0
     container_name: prometheus
@@ -77,44 +49,6 @@ services:
           memory: 512M
         reservations:
           memory: 128M
-
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.47.0
-    container_name: cadvisor
-    restart: unless-stopped
-
-    userns_mode: host
-
-    expose:
-      - "8081"
-    command:
-      - -port=8081
-
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost:8081/healthz"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-          cpus: "0.5"
-        reservations:
-          memory: 256M
-
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:ro
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-      - /dev/disk/:/dev/disk:ro
-    devices:
-      - /dev/kmsg
-    privileged: true
-    networks:
-      - monitoring-layer
 
   blackbox-exporter:
     image: prom/blackbox-exporter:v0.28.0
@@ -181,7 +115,7 @@ services:
         condition: service_healthy
     entrypoint: >
       /bin/sh -c "
-      /usr/bin/mc alias set myminio http://minio:9000 minioadmin minioadmin;
+      /usr/bin/mc alias set myminio http://minio:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
       /usr/bin/mc mb --ignore-existing myminio/loki-data;
       exit 0;
       "
@@ -268,7 +202,6 @@ services:
 volumes:
   grafana_data:
   prometheus_data:
-  alertmanager_data:
   minio_data:
   loki_wal:
 
