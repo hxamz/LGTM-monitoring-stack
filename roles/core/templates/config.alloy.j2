@@ -1,18 +1,35 @@
 // METRICS
 
-prometheus.exporter.unix "node_exporter" {
+// NODE EXPORTER
+prometheus.exporter.unix "default" {
 	rootfs_path = "/host/root"
 	sysfs_path = "/host/sys"
 	procfs_path = "/host/proc"
 }
 
 prometheus.scrape "host_metrics" {
-	targets         = prometheus.exporter.unix.node_exporter.targets
+	targets         = prometheus.exporter.unix.default.targets
 	
-	scrape_interval = "11s"
+	scrape_interval = "10s"
 	scrape_timeout = "10s"
 	
 	forward_to      = [prometheus.remote_write.prom.receiver]
+}
+
+// CADVISOR
+prometheus.exporter.cadvisor "default" {
+  docker_host = "unix:///var/run/docker.sock"
+  docker_only = true
+  disabled_metrics = ["referenced_memory"]
+}
+
+prometheus.scrape "cadvisor_metrics" {
+  targets         = prometheus.exporter.cadvisor.default.targets
+  
+  scrape_interval = "15s"
+  scrape_timeout = "10s"
+  
+  forward_to      = [prometheus.remote_write.prom.receiver]
 }
 
 prometheus.remote_write "prom" {

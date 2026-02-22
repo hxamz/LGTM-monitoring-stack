@@ -1,6 +1,8 @@
 # SPDX-License-Identifier: MIT-0
 ---
 # handlers file for core
+
+# Grafana Alloy
 - name: Wait for Alloy is ready
   ansible.builtin.wait_for:
     host: 127.0.0.1
@@ -15,10 +17,35 @@
     url: http://127.0.0.1:12345/-/reload
     method: GET
     status_code: 200
+    return_content: true
   register: core_alloy_reload
   listen: "Reload Alloy"
 
 - name: Show Alloy reload results
   ansible.builtin.debug:
-    var: core_alloy_reload.content
+    var: core_alloy_reload.msg
   listen: "Reload Alloy"
+
+# Prometheus
+- name: Wait for Prometheus is ready
+  ansible.builtin.wait_for:
+    host: 127.0.0.1
+    port: 9090
+    state: started
+    delay: 2
+    timeout: 30
+  listen: "Reload Prometheus"
+
+- name: Send request to Prometheus reload
+  ansible.builtin.uri:
+    url: http://127.0.0.1:9090/-/reload
+    method: POST
+    status_code: 200
+    return_content: true
+  register: core_prometheus_reload
+  listen: "Reload Prometheus"
+
+- name: Show Prometheus reload results
+  ansible.builtin.debug:
+    var: core_prometheus_reload.msg
+  listen: "Reload Prometheus"
