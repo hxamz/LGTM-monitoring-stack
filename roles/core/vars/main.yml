@@ -1,3 +1,10 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 # vars file for core
+core_alloy_version: v1.12.2
+core_alloy_port: 12345
+
+core_prometheus_version: v3.9.0
+core_prometheus_port: 9090
+core_prometheus_retention_time: 30d
+core_prometheus_retention_size: 5GB

@@ -1,0 +1,10 @@
+---
+- name: Send Alloy reload request
+  ansible.builtin.uri:
+    url: http://127.0.0.1:12345/-/reload
+    return_content: true
+  register: core_alloy_reload
+
+- name: Show Alloy reload result
+  ansible.builtin.debug:
+    var: core_alloy_reload.content

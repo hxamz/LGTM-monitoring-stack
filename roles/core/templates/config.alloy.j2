@@ -1,0 +1,23 @@
+// METRICS
+
+prometheus.exporter.unix "node_exporter" {
+	rootfs_path = "/host/root"
+	sysfs_path = "/host/sys"
+	procfs_path = "/host/proc"
+}
+
+prometheus.scrape "host_metrics" {
+	targets         = prometheus.exporter.unix.node_exporter.targets
+	
+	scrape_interval = "11s"
+	scrape_timeout = "10s"
+	
+	forward_to      = [prometheus.remote_write.prom.receiver]
+}
+
+prometheus.remote_write "prom" {
+	endpoint {
+		url = "http://127.0.0.1:9090/api/v1/write"
+	}
+}
+

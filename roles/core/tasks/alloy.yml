@@ -1,0 +1,17 @@
+---
+- name: Ensure alloy directory exists
+  ansible.builtin.file:
+    state: directory
+    path: /opt/monitoring/alloy
+    owner: rm
+    group: rm
+    mode: "0755"
+
+- name: Copy config.alloy to alloy directory
+  ansible.builtin.template:
+    src: config.alloy.j2
+    dest: /opt/monitoring/alloy/config.alloy
+    owner: rm
+    group: rm
+    mode: "0755"
+  notify: Reload Alloy

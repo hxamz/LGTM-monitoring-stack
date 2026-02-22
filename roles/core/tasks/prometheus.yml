@@ -1,0 +1,16 @@
+---
+- name: Ensure prometheus directory exists
+  ansible.builtin.file:
+    state: directory
+    path: /opt/monitoring/prometheus
+    owner: rm
+    group: rm
+    mode: "0755"
+
+- name: Copy prometheus.yml to prometheus directory
+  ansible.builtin.template:
+    src: prometheus.yml.j2
+    dest: /opt/monitoring/prometheus/prometheus.yml
+    owner: rm
+    group: rm
+    mode: "0755"
