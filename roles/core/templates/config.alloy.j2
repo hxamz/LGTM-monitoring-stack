@@ -10,7 +10,7 @@ prometheus.exporter.unix "default" {
 prometheus.scrape "host_metrics" {
 	targets         = prometheus.exporter.unix.default.targets
 	
-	scrape_interval = "10s"
+	scrape_interval = "11s"
 	scrape_timeout = "10s"
 	
 	forward_to      = [prometheus.remote_write.prom.receiver]

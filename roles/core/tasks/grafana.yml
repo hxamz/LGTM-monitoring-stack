@@ -1,0 +1,38 @@
+---
+- name: Ensure Grafana directories exists
+  ansible.builtin.file:
+    state: directory
+    path: "{{ item }}"
+    owner: rm
+    group: rm
+    mode: "0755"
+  loop:
+    - /opt/monitoring/grafana
+    - /opt/monitoring/grafana/dashboards_json
+    - /opt/monitoring/grafana/provisioning/dashboards
+    - /opt/monitoring/grafana/provisioning/datasources
+
+- name: Copy Grafana JSON dashboards
+  ansible.builtin.copy:
+    src: grafana/dashboards/
+    dest: /opt/monitoring/grafana/dashboards_json/
+    owner: rm
+    group: rm
+    mode: "0755"
+
+- name: Copy Grafana dashboards provider
+  ansible.builtin.template:
+    src: grafana/providers.yml.j2
+    dest: /opt/monitoring/grafana/provisioning/dashboards/providers.yml
+    owner: rm
+    group: rm
+    mode: "0755"
+  notify: Grafana reload
+
+- name: Copy Grafana datasources provider
+  ansible.builtin.template:
+    src: grafana/lgtm_datasources.yml.j2
+    dest: /opt/monitoring/grafana/provisioning/datasources/lgtm_datasources.yml
+    owner: rm
+    group: rm
+    mode: "0755"

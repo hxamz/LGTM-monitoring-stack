@@ -5,6 +5,10 @@ core_alloy_version: v1.12.2
 core_alloy_port: 12345
 
 core_prometheus_version: v3.9.0
+core_prometheus_addr: prometheus
 core_prometheus_port: 9090
 core_prometheus_retention_time: 30d
 core_prometheus_retention_size: 5GB
+
+core_grafana_version: 12.3.1
+core_grafana_port: 3000

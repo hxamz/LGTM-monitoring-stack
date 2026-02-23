@@ -1,9 +1,9 @@
 ---
-- name: Ensure docker installed
-  hosts: monitorting_core
-  become: true
-  roles:
-    - geerlingguy.docker
+# - name: Ensure docker installed
+#   hosts: monitorting_core
+#   become: true
+#   roles:
+#     - geerlingguy.docker
 
 
 - name: Deploy LGTM Stack

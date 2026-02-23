@@ -14,4 +14,4 @@
     owner: rm
     group: rm
     mode: "0755"
-  notify: Reload Alloy
+  notify: Alloy reload

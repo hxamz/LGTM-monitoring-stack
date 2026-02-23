@@ -3,49 +3,13 @@
 # handlers file for core
 
 # Grafana Alloy
-- name: Wait for Alloy is ready
-  ansible.builtin.wait_for:
-    host: 127.0.0.1
-    port: 12345
-    state: started
-    delay: 2
-    timeout: 30
-  listen: "Reload Alloy"
-
-- name: Send request to Alloy reload
-  ansible.builtin.uri:
-    url: http://127.0.0.1:12345/-/reload
-    method: GET
-    status_code: 200
-    return_content: true
-  register: core_alloy_reload
-  listen: "Reload Alloy"
-
-- name: Show Alloy reload results
-  ansible.builtin.debug:
-    var: core_alloy_reload.msg
-  listen: "Reload Alloy"
+- name: Alloy reload
+  ansible.builtin.include_tasks: alloy_reload.yml
 
 # Prometheus
-- name: Wait for Prometheus is ready
-  ansible.builtin.wait_for:
-    host: 127.0.0.1
-    port: 9090
-    state: started
-    delay: 2
-    timeout: 30
-  listen: "Reload Prometheus"
+- name: Prometheus reload
+  ansible.builtin.include_tasks: prometheus_reload.yml
 
-- name: Send request to Prometheus reload
-  ansible.builtin.uri:
-    url: http://127.0.0.1:9090/-/reload
-    method: POST
-    status_code: 200
-    return_content: true
-  register: core_prometheus_reload
-  listen: "Reload Prometheus"
-
-- name: Show Prometheus reload results
-  ansible.builtin.debug:
-    var: core_prometheus_reload.msg
-  listen: "Reload Prometheus"
+# Grafana
+- name: Grafana reload
+  ansible.builtin.include_tasks: grafana_reload.yml

@@ -43,6 +43,9 @@
 - name: Prepare Prometheus
   ansible.builtin.import_tasks: prometheus.yml
 
+- name: Prepare Grafana
+  ansible.builtin.import_tasks: grafana.yml
+
 - name: Create and start services
   community.docker.docker_compose_v2:
     project_src: /opt/monitoring
