@@ -1,0 +1,19 @@
+---
+- name: Ensure Loki directories exist
+  ansible.builtin.file:
+    state: directory
+    path: "{{ item }}"
+    owner: rm
+    group: rm
+    mode: "0755"
+  loop:
+    - /opt/monitoring/loki
+
+- name: Copy Loki config from template
+  ansible.builtin.template:
+    src: loki.yml.j2
+    dest: /opt/monitoring/loki/loki.yml
+    owner: rm
+    group: rm
+    mode: "0755"
+  notify: Loki reload

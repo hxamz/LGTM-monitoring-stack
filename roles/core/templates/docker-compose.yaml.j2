@@ -93,12 +93,93 @@ services:
         reservations:
           memory: 128M
 
+  minio:
+    image: minio/minio:${MINIO_VERSION}
+    container_name: minio
+    restart: unless-stopped
+    
+    expose:
+      - "${MINIO_PORT_API}"
+      - "${MINIO_PORT_UI}"
+    ports:
+      - "127.0.0.1:${MINIO_PORT_UI}:${MINIO_PORT_UI}"
+    command: server /data --console-address ":${MINIO_PORT_UI}"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${MINIO_PORT_API}/minio/health/live"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+    volumes:
+      - minio_data:/data
+    networks:
+      - monitoring-layer
+
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          memory: 256M
+
+  minio-create-bucket:
+    image: minio/mc
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set myminio http://minio:${MINIO_PORT_API} ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
+      /usr/bin/mc mb --ignore-existing myminio/loki-data;
+      exit 0;
+      "
+    networks:
+      - monitoring-layer
+
+  loki-init:
+    image: alpine:latest
+    volumes:
+      - loki_wal:/loki
+    command: chown -R 10001:10001 /loki
+
+  loki:
+    image: grafana/loki:${LOKI_VERSION}
+    container_name: loki
+    restart: unless-stopped
+
+    volumes:
+      - loki_wal:/loki/wal
+      - ./loki/loki.yml:/etc/loki/local-config.yaml
+    ports:
+      - "127.0.0.1:${LOKI_PORT}:3100"
+    depends_on:
+      loki-init:
+        condition: service_completed_successfully
+      minio:
+        condition: service_healthy
+    networks:
+      - monitoring-layer
+
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          memory: 256M
+
 
 volumes:
   prometheus_data:
   grafana_data:
-#   minio_data:
-#   loki_wal:
+  minio_data:
+  loki_wal:
 
 networks:
   monitoring-layer:

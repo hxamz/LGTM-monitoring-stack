@@ -2,22 +2,37 @@
 - name: Wait for Grafana is ready
   ansible.builtin.wait_for:
     host: 127.0.0.1
-    port: 3000
+    port: "{{ core_grafana_port }}"
     state: started
     delay: 2
     timeout: 30
 
-- name: Send reload request to Grafana
+- name: Send Grafana dashboards reload request
   ansible.builtin.uri:
-    url: http://127.0.0.1:3000/api/admin/provisioning/dashboards/reload
+    url: "http://127.0.0.1:{{ core_grafana_port }}/api/admin/provisioning/dashboards/reload"
     method: POST
     status_code: 200
     return_content: true
     url_username: "{{ vault_grafana_admin_user }}"
     url_password: "{{ vault_grafana_admin_password }}"
     force_basic_auth: true
-  register: core_prometheus_reload
+  register: core_grafana_reload
 
-- name: Show Grafana reload results
+- name: Show Grafana dashboards reload results
   ansible.builtin.debug:
-    var: core_prometheus_reload.msg
+    var: core_grafana_reload.msg
+
+- name: Send Grafana datasources reload request
+  ansible.builtin.uri:
+    url: "http://127.0.0.1:{{ core_grafana_port }}/api/admin/provisioning/datasources/reload"
+    method: POST
+    status_code: 200
+    return_content: true
+    url_username: "{{ vault_grafana_admin_user }}"
+    url_password: "{{ vault_grafana_admin_password }}"
+    force_basic_auth: true
+  register: core_grafana_reload
+
+- name: Show Grafana datasources reload results
+  ansible.builtin.debug:
+    var: core_grafana_reload.msg

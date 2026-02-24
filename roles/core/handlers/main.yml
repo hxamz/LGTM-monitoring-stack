@@ -13,3 +13,10 @@
 # Grafana
 - name: Grafana reload
   ansible.builtin.include_tasks: grafana_reload.yml
+
+- name: Loki reload
+  community.docker.docker_compose_v2:
+    project_src: /opt/monitoring
+    services:
+      - loki
+    state: restarted

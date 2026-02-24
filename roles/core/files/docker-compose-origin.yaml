@@ -119,7 +119,6 @@ services:
       /usr/bin/mc mb --ignore-existing myminio/loki-data;
       exit 0;
       "
-
     networks:
       - monitoring-layer
 

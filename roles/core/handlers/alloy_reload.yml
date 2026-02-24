@@ -2,14 +2,14 @@
 - name: Wait for Alloy is ready
   ansible.builtin.wait_for:
     host: 127.0.0.1
-    port: 12345
+    port: "{{ core_alloy_port }}"
     state: started
     delay: 2
     timeout: 30
 
 - name: Send request to Alloy reload
   ansible.builtin.uri:
-    url: http://127.0.0.1:12345/-/reload
+    url: "http://127.0.0.1:{{ core_alloy_port }}/-/reload"
     method: GET
     status_code: 200
     return_content: true

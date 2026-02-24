@@ -12,3 +12,10 @@ core_prometheus_retention_size: 5GB
 
 core_grafana_version: 12.3.1
 core_grafana_port: 3000
+
+core_minio_version: RELEASE.2025-09-07T16-13-09Z
+core_minio_port_api: 9000
+core_minio_port_ui: 9001
+
+core_loki_version: 3.6
+core_loki_port: 3100

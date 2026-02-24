@@ -2,14 +2,14 @@
 - name: Wait for Prometheus is ready
   ansible.builtin.wait_for:
     host: 127.0.0.1
-    port: 9090
+    port: "{{ core_prometheus_port }}"
     state: started
     delay: 2
     timeout: 30
 
 - name: Send request to Prometheus reload
   ansible.builtin.uri:
-    url: http://127.0.0.1:9090/-/reload
+    url: "http://127.0.0.1:{{ core_prometheus_port }}/-/reload"
     method: POST
     status_code: 200
     return_content: true
