@@ -19,3 +19,6 @@ core_minio_port_ui: 9001
 
 core_loki_version: 3.6
 core_loki_port: 3100
+
+core_blackbox_version: v0.28.0
+core_blackbox_port: 9115

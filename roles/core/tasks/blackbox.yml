@@ -1,0 +1,19 @@
+---
+- name: Ensure Blackbox directories exist
+  ansible.builtin.file:
+    state: directory
+    path: "{{ item }}"
+    owner: rm
+    group: rm
+    mode: "0755"
+  loop:
+    - /opt/monitoring/blackbox
+
+- name: Copy Blackbox config from template
+  ansible.builtin.template:
+    src: blackbox.yml.j2
+    dest: /opt/monitoring/blackbox/blackbox.yml
+    owner: rm
+    group: rm
+    mode: "0755"
+  notify: Blackbox reload

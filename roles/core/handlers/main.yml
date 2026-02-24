@@ -20,3 +20,6 @@
     services:
       - loki
     state: restarted
+
+- name: Blackbox reload
+  ansible.builtin.include_tasks: blackbox_reload.yml

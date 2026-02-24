@@ -1,0 +1,20 @@
+---
+- name: Wait for Blackbox is ready
+  ansible.builtin.wait_for:
+    host: 127.0.0.1
+    port: "{{ core_blackbox_port }}"
+    state: started
+    delay: 2
+    timeout: 30
+
+- name: Send request to Blackbox reload
+  ansible.builtin.uri:
+    url: "http://127.0.0.1:{{ core_blackbox_port }}/-/reload"
+    method: POST
+    status_code: 200
+    return_content: true
+  register: core_blackbox_reload
+
+- name: Show Blackbox reload results
+  ansible.builtin.debug:
+    var: core_blackbox_reload.msg

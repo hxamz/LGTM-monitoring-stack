@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": null,
+  "id": 1,
   "links": [],
   "panels": [
     {
@@ -37,7 +37,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "ef9g273n5e7swc"
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
@@ -102,7 +102,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "sum(delta(container_memory_usage_bytes{name=\"podinfo\"}[1h]))",
+          "expr": "sum(delta(container_memory_usage_bytes{name=\"alloy\"}[1h]))",
           "format": "time_series",
           "legendFormat": "__auto",
           "range": true,
@@ -115,133 +115,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "ef9g273n5e7swc"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 1
-      },
-      "id": 2,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "vertical",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.3.1",
-      "targets": [
-        {
-          "editorMode": "code",
-          "expr": "sum by (status) (rate(http_requests_total{status=~\"$status_code\"}[5m]))\r\n/ ignoring(status) group_left\r\nsum(rate(http_requests_total{status=~\"$status_code\"}[5m]))\r\n* 100",
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "RPS %",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "ef9g273n5e7swc"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              }
-            ]
-          },
-          "unit": "decbytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 9
-      },
-      "id": 5,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.3.1",
-      "targets": [
-        {
-          "editorMode": "code",
-          "expr": "sum(increase(container_network_transmit_bytes_total{name=~\"$container\"}[$__range]))",
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Traffic Transmit by Container",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "ef9g273n5e7swc"
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
@@ -284,7 +158,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 10
+        "y": 1
       },
       "id": 4,
       "options": {
@@ -334,49 +208,12 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "ef9g273n5e7swc"
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineStyle": {
-              "fill": "solid"
-            },
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "normal"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
           },
           "mappings": [],
           "thresholds": {
@@ -385,150 +222,49 @@
               {
                 "color": "green",
                 "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 0,
-        "y": 17
-      },
-      "id": 1,
-      "options": {
-        "legend": {
-          "calcs": [
-            "mean",
-            "max"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
-        },
-        "timezone": [
-          "utc"
-        ],
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.3.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "ef9g273n5e7swc"
           },
-          "editorMode": "code",
-          "expr": "sum by(status) (rate(http_requests_total{status=~\"$status_code\"}[5m]))",
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "RPS",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "ef9g273n5e7swc"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "scaleDistribution": {
-              "type": "linear"
-            }
-          }
+          "unit": "decbytes"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
+        "w": 24,
         "x": 0,
-        "y": 26
+        "y": 9
       },
-      "id": 3,
+      "id": 5,
       "options": {
-        "calculate": false,
-        "calculation": {
-          "xBuckets": {
-            "mode": "size",
-            "value": ""
-          },
-          "yBuckets": {
-            "scale": {
-              "type": "linear"
-            }
-          }
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
         },
-        "cellGap": 1,
-        "cellValues": {
-          "unit": ""
-        },
-        "color": {
-          "exponent": 0.5,
-          "fill": "dark-orange",
-          "mode": "scheme",
-          "reverse": false,
-          "scale": "exponential",
-          "scheme": "Cool",
-          "steps": 64
-        },
-        "exemplars": {
-          "color": "rgba(255,0,255,0.7)"
-        },
-        "filterValues": {
-          "le": 1e-9
-        },
-        "legend": {
-          "show": true
-        },
-        "rowsFrame": {
-          "layout": "auto"
-        },
-        "tooltip": {
-          "mode": "single",
-          "showColorScale": false,
-          "yHistogram": false
-        },
-        "yAxis": {
-          "axisPlacement": "left",
-          "reverse": false,
-          "unit": ""
-        }
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
       "pluginVersion": "12.3.1",
       "targets": [
         {
           "editorMode": "code",
-          "exemplar": true,
-          "expr": "sum (rate(http_request_duration_seconds_bucket{job=\"podinfo\"}[$__rate_interval])) by (le) ",
-          "format": "time_series",
-          "instant": false,
+          "expr": "sum(increase(container_network_transmit_bytes_total{name=~\"$container\"}[$__range]))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Тепловая карта задержек",
-      "type": "heatmap"
+      "title": "Traffic Transmit by Container",
+      "type": "stat"
     },
     {
       "collapsed": false,
@@ -536,7 +272,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 34
+        "y": 17
       },
       "id": 8,
       "panels": [],
@@ -546,7 +282,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "ef9g273n5e7swc"
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
@@ -587,7 +323,7 @@
         "h": 3,
         "w": 4,
         "x": 0,
-        "y": 35
+        "y": 18
       },
       "id": 11,
       "options": {
@@ -623,7 +359,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "ef9g273n5e7swc"
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
@@ -685,7 +421,7 @@
         "h": 9,
         "w": 10,
         "x": 4,
-        "y": 35
+        "y": 18
       },
       "id": 12,
       "options": {
@@ -717,7 +453,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "ef9g273n5e7swc"
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
@@ -776,7 +512,7 @@
         "h": 9,
         "w": 10,
         "x": 14,
-        "y": 35
+        "y": 18
       },
       "id": 14,
       "options": {
@@ -808,7 +544,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "ef9g273n5e7swc"
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
@@ -834,7 +570,7 @@
         "h": 3,
         "w": 4,
         "x": 0,
-        "y": 38
+        "y": 21
       },
       "id": 10,
       "options": {
@@ -870,7 +606,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "ef9g273n5e7swc"
+        "uid": "PBFA97CFB590B2093"
       },
       "description": "",
       "fieldConfig": {
@@ -897,7 +633,7 @@
         "h": 3,
         "w": 4,
         "x": 0,
-        "y": 41
+        "y": 24
       },
       "id": 9,
       "options": {
@@ -937,7 +673,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "ef9g273n5e7swc"
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
@@ -978,7 +714,7 @@
         "h": 3,
         "w": 4,
         "x": 0,
-        "y": 44
+        "y": 27
       },
       "id": 13,
       "options": {
@@ -1014,7 +750,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "ef9g273n5e7swc"
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
@@ -1045,7 +781,7 @@
         "h": 3,
         "w": 9,
         "x": 4,
-        "y": 44
+        "y": 27
       },
       "id": 15,
       "options": {
@@ -1092,7 +828,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "ef9g273n5e7swc"
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
@@ -1118,7 +854,7 @@
         "h": 5,
         "w": 11,
         "x": 13,
-        "y": 44
+        "y": 27
       },
       "id": 16,
       "options": {
@@ -1239,5 +975,5 @@
   "timezone": "browser",
   "title": "Podinfo Test Sandbox",
   "uid": "podinfo-sandbox",
-  "version": 30
+  "version": 2
 }

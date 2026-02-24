@@ -1,11 +1,14 @@
 ---
-- name: Ensure prometheus directory exists
+- name: Ensure prometheus directories exists
   ansible.builtin.file:
     state: directory
-    path: /opt/monitoring/prometheus
+    path: "{{ item }}"
     owner: rm
     group: rm
     mode: "0755"
+  loop:
+    - /opt/monitoring/prometheus
+    - /opt/monitoring/prometheus/targets
 
 - name: Copy prometheus.yml to prometheus directory
   ansible.builtin.template:
@@ -15,3 +18,13 @@
     group: rm
     mode: "0755"
   notify: Prometheus reload
+
+- name: Copy Prometheus targets from template
+  ansible.builtin.template:
+    src: "{{ item }}.j2"
+    dest: "/opt/monitoring/prometheus/targets/{{ item }}"
+    owner: rm
+    group: rm
+    mode: "0644"
+  loop:
+    - blackbox_targets.yml
