@@ -1,0 +1,68 @@
+// METRICS
+
+// Node Exporter
+prometheus.exporter.unix "node_metrics" { }
+
+discovery.relabel "node_metrics_relabel" {
+  targets = prometheus.exporter.unix.node_metrics.targets
+  rule {
+    target_label = "instance"
+    replacement  = "{{ inventory_hostname }}" 
+  }
+}
+
+prometheus.scrape "node_scrape" {
+  targets    = discovery.relabel.node_metrics_relabel.output
+  forward_to = [prometheus.remote_write.central.receiver]
+
+  scrape_interval = "10s"
+	scrape_timeout = "10s"
+
+  job_name   = "node"
+}
+
+// LOGS
+
+// PHP-FPM
+local.file_match "app_logs" {
+  path_targets = [
+    {__path__ = "/var/log/php7.4-fpm.log", job = "php-fpm"},
+  ]
+}
+
+discovery.relabel "add_instance_label" {
+  targets = local.file_match.app_logs.targets
+  rule {
+    target_label = "instance"
+    replacement  = "{{ inventory_hostname }}"
+  }
+}
+
+loki.source.file "app_logs_reader" {
+  targets    = discovery.relabel.add_instance_label.output
+  forward_to = [loki.write.central_loki.receiver]
+}
+
+// REMOTE WRITE
+
+prometheus.remote_write "central" {
+  endpoint {
+    url = "{{ vault_prometheus_push_url }}"
+
+    basic_auth {
+      username = "alloy_agent"
+      password = "{{ vault_agent_password }}"
+    }
+  }
+}
+
+loki.write "central_loki" {
+  endpoint {
+    url = "{{ vault_loki_push_url }}"
+
+    basic_auth {
+      username = "alloy_agent"
+      password = "{{ vault_agent_password }}"
+    }
+  }
+}

@@ -11,3 +11,9 @@
   become: true
   roles:
     - core
+
+# - name: Deploy Alloy on Agent node
+#   hosts: monitoring_agents
+#   become: true
+#   roles:
+#     - agent

@@ -1,3 +1,27 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 # tasks file for agent
+- name: Install and Run Alloy
+  ansible.builtin.include_role:
+    name: grafana.grafana.alloy
+  vars:
+    alloy_config: "{{ lookup('template', 'agent_alloy.j2') }}"
+    alloy_version: 1.12.2
+
+- name: Add Alloy user to adm group to /var/log access
+  ansible.builtin.user:
+    name: alloy
+    groups: adm
+    append: true
+
+- name: Setting correct permissions to /var/log/php7.4-fpm.log
+  ansible.builtin.file:
+    path: /var/log/php7.4-fpm.log
+    owner: root
+    group: adm
+    mode: "0640"
+
+- name: Restart Alloy to consider access
+  ansible.builtin.systemd:
+    name: alloy
+    state: restarted

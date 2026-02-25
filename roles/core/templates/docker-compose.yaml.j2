@@ -78,8 +78,10 @@ services:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
       - GF_USERS_ALLOW_SIGN_UP=false
-    ports:
-      - "${GRAFANA_PORT}:3000"
+      - GF_SERVER_DOMAIN=${GRAFANA_DOMAIN}
+      - GF_SERVER_ROOT_URL=${GRAFANA_ROOT_URL}
+    expose:
+      - "3000"
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
@@ -198,6 +200,27 @@ services:
     networks:
       - monitoring-layer
 
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx
+    restart: unless-stopped
+
+    ports:
+      - "80:80"
+    depends_on: ["prometheus", "loki", "grafana"]
+    volumes:
+      - ./nginx/nginx_proxy.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
+    networks:
+      - monitoring-layer
+
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "0.5"
+        reservations:
+          memory: 256M
 
 volumes:
   prometheus_data:

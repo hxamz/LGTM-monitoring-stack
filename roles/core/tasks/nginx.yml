@@ -1,0 +1,31 @@
+---
+- name: Install python3-passlib package
+  ansible.builtin.apt:
+    name: python3-passlib
+    state: present
+
+- name: Ensure Nginx directory exist
+  ansible.builtin.file:
+    state: directory
+    path: /opt/monitoring/nginx
+    owner: rm
+    group: rm
+    mode: "0755"
+
+- name: Create .htpasswd file for Nginx Basic Auth
+  community.general.htpasswd:
+    path: /opt/monitoring/nginx/.htpasswd
+    name: alloy_agent
+    password: "{{ vault_agent_password }}"
+    owner: rm
+    group: rm
+    mode: "0644"
+
+- name: Copy Nginx config from template
+  ansible.builtin.template:
+    src: nginx_proxy.conf.j2
+    dest: /opt/monitoring/nginx/nginx_proxy.conf
+    owner: rm
+    group: rm
+    mode: "0755"
+  notify: Nginx reload

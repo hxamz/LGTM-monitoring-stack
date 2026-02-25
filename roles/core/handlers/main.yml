@@ -23,3 +23,6 @@
 
 - name: Blackbox reload
   ansible.builtin.include_tasks: blackbox_reload.yml
+
+- name: Nginx reload
+  ansible.builtin.include_tasks: nginx_reload.yml

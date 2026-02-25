@@ -1,0 +1,10 @@
+---
+- name: Nginx reload request
+  community.docker.docker_container_exec:
+    container: nginx
+    command: nginx -s reload
+  register: core_nginx_reload_result
+
+- name: Show nginx reload results
+  ansible.builtin.debug:
+    var: core_nginx_reload_result
